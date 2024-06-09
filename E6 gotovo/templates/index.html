@@ -1,0 +1,33 @@
+{% extends 'default.html' %}
+{% load static %}
+
+{% block title %}
+Комнаты
+{% endblock title %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <br>
+        {% if user.profile.avatar %}
+            <img src="{{ user.profile.avatar.url }}" alt="Avatar" class="logo-image"
+                style="float: left; width: 50px; height: 50px; border-radius: 15px;">
+        {% endif %}
+        <p>Назовите новую комнату для общения</p>
+        <p><em>Latin letters, numbers and spaces only</em></p>
+        <input class="form-control" id="room-name-input" type="text" size="100"><br>
+        <input class="btn btn-primary btn-lg btn-block" id="room-name-submit" type="button" value="Создать комнату"><br>
+        <p>***</p>
+        <p>Или зайдите в уже существующую комнату:</p>
+        <div id="rooms-list">no room</div>
+
+        {{ rooms|json_script:"rooms" }}
+        <script src="{% static 'js/rooms.js' %}"></script>
+    {% else %}
+        <h2>Что будем делать?</h2>
+        <hr>
+        <a class="nav-link" href="/accounts/login/">Войти</a>
+        <br>
+        <a class="nav-link" href="/accounts/signup/">Регистрация</a>
+    {% endif %}
+{% endblock content %}
+

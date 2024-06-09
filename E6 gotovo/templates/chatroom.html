@@ -1,0 +1,58 @@
+{% extends 'default.html' %}
+{% load static %}
+{% block title %}
+Комната {{ room_name }}
+{% endblock title %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h4>Пользователи в чате:</h4>
+                    <ul id="users-in-room" class="list-group">
+                        <!-- Здесь будут отображаться пользователи -->
+                    </ul>
+                </div>
+                <div class="col-md-8">
+                    <form>
+                        <div class="form-group">
+                            <br>
+                            {% if user.profile.avatar %}
+                            <img src="{{ user.profile.avatar.url }}" alt="Avatar" class="logo-image"
+                                style="float: left; width: 100px; height: 100px; border-radius: 15px;">
+                            {% endif %}
+                            <h3>Чат</h3><br>
+                            <textarea class="form-control" id="chat-text" readonly rows="20" style="width: 100%;"></textarea><br>
+                        </div>
+                        <div class="form-group">
+                            {% csrf_token %}
+                            <input class="form-control" placeholder="Введите сообщение" id="chat-message-input" type="text"/>
+                        </div>
+                        <div style="display: flex;">
+                            <input class="btn btn-primary" id="chat-message-submit" type="button"
+                                style="width: 65%;" value="Отправить"/>&nbsp;
+                            <input class="btn btn-primary" id="leave-room-submit" type="button"
+                                style="width: 33%;" value="Покинуть чат"/>
+                        </div><br>
+
+                        <p>*** Чтобы отправить личное сообщение, выберите получателя из перечня пользователей</p>
+                        <div id="connections"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {{ request.user.username|json_script:"user_username" }}
+        {{ room_name|json_script:"room-name" }}
+
+        <!-- Подключение внешнего JavaScript файла -->
+        <script src="{% static 'js/chat.js' %}"></script>
+    {% else %}
+        <h2>Log in or Sign up</h2>
+        <hr>
+        <a class="nav-link" href="/accounts/login/">Log in</a>
+        <br>
+        <a class="nav-link" href="/accounts/signup/">Sign up</a>
+    {% endif %}
+{% endblock content %}
+
